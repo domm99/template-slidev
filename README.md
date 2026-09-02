@@ -1,94 +1,132 @@
-# Slidev reusable template
+# Slidev Reusable Template
 
-Template riusabile per presentazioni [Slidev](https://sli.dev), estratto dal
-tema/design system usato in `slides-2026-coordination-phyelds`, ma ripulito
-da tutti i contenuti e componenti specifici di quella ricerca (diagrammi
-animati sul field-calculus, logo del progetto, riferimenti, ecc.).
+A reusable template for building presentations with Slidev.
 
-## Cosa contiene
+The repository provides a ready-to-use presentation structure, a shared design system, reusable Vue components, bibliography management, slide patterns, and automatic deployment to GitHub Pages.
 
-```
-slides-template/
-├── slides.md                  # scaffold con tutti i pattern di slide pronti
+## What's Included
+
+```text
+template-slidev/
+├── slides.md                  # Slide scaffold with reusable presentation patterns
 ├── package.json
-├── styles/index.css           # design system (colori, tipografia, utility class)
+├── styles/index.css           # Design system: colors, typography, and utility classes
 ├── components/
-│   ├── BaseImg.vue            # <img> che rispetta il base path (GitHub Pages)
-│   ├── QrCard.vue             # card con QR code + titolo
-│   ├── Cites.vue              # footnote di citazione per slide
-│   ├── References.vue         # slide finale bibliografia, generata da references.ts
-│   ├── references.ts          # unica fonte di verità per la bibliografia
-│   ├── Logo.vue                # logo segnaposto (SVG), da sostituire col tuo
-│   └── FlowDiagram.vue         # diagramma a step animato e riusabile (click-reveal)
-├── scripts/postbuild.mjs      # genera redirect per link diretti a singole slide
-└── .github/workflows/deploy-slides.yml  # deploy automatico su GitHub Pages
+│   ├── BaseImg.vue            # Image component that respects the GitHub Pages base path
+│   ├── QrCard.vue             # QR code card with title
+│   ├── Cites.vue              # Per-slide citation footnotes
+│   ├── References.vue         # Final bibliography slide generated from references.ts
+│   ├── references.ts          # Single source of truth for bibliography entries
+│   ├── Logo.vue               # Placeholder SVG logo
+│   └── FlowDiagram.vue        # Reusable animated step diagram with click reveal
+├── scripts/postbuild.mjs      # Generates redirects for direct links to individual slides
+└── .github/workflows/
+    └── deploy-slides.yml      # Automatic deployment to GitHub Pages
 ```
 
 ## Setup
 
 ```bash
 npm install
-npm run dev      # anteprima locale, http://localhost:3030
-npm run build    # build statica in dist/ (con redirect per slide)
-npm run export   # esporta in PDF
+npm run dev      # Local preview at http://localhost:3030
+npm run build    # Static build in dist/, including slide redirects
+npm run export   # Export the presentation to PDF
 ```
 
-## Pattern di slide disponibili in `slides.md`
+## Slide Patterns
 
-Ogni slide usa `class:` nel frontmatter per scegliere un layout definito
-in `styles/index.css`:
+`slides.md` contains reusable examples for the main presentation layouts.
 
-- **`first-slide` / `deck-cover`** — copertina, contenuto centrato.
-- **`stage-slide`** — titolo + prosa, centrato verticalmente. Il default
-  per slide argomentative; usa `<v-clicks>` per rivelare i bullet uno a uno.
-- **`viz-slide`** — layout a due colonne (`split-grid`): testo a sinistra,
-  visual a destra.
-- **`code-slide`** — blocco di codice con line-highlight progressivo
-  (`{all|3-5|6}`) più una breakdown a 3 colonne sotto.
-- **`end-slide`** — per takeaway/riepilogo o slide finale di ringraziamenti.
+Each slide uses the `class:` property in its frontmatter to select a layout defined in `styles/index.css`.
 
-Classi di utility CSS pronte all'uso: `mark-teal/orange/green` (evidenziazioni),
-`u-solid/dashed/wavy/dotted-*` (sottolineature), `comparison-grid` /
-`comparison-card`, `three-up`, `pipeline-grid`, `soft-card`, `slide-shell`
-(contenitore centrato standard). Guarda `styles/index.css` per l'elenco completo.
+* **`first-slide` / `deck-cover`** — presentation cover with centered content.
+* **`stage-slide`** — title and text layout, vertically centered. Suitable for narrative or argumentative slides. Use `<v-clicks>` to progressively reveal bullet points.
+* **`viz-slide`** — two-column layout based on `split-grid`, with text on the left and a visual on the right.
+* **`code-slide`** — code-focused layout supporting progressive line highlighting, such as `{all|3-5|6}`, with a three-column breakdown below.
+* **`end-slide`** — layout for takeaways, summaries, or the final presentation slide.
 
-## Componenti riusabili
+Several reusable CSS utility classes are also available, including:
 
-- **`<Logo text="..." />`** — segnaposto SVG. Sostituiscilo con il tuo logo
-  reale (o rimpiazza gli usi con `<BaseImg src="logo.png" />`, mettendo il
-  file in `public/`).
-- **`<QrCard title="..." url="..." :size="6.5" />`** — genera il QR a runtime.
-- **`<Cites refs="1,3" />`** e **`<References />`** — sistema di citazioni
-  basato su `components/references.ts`: aggiungi/modifica una voce lì e si
-  aggiorna automaticamente sia la nota a piè di slide sia la slide finale.
-- **`<FlowDiagram :stages="[...]" :click="$clicks" />`** — diagramma a step
-  con reveal progressivo legato ai click della presentazione. Pattern
-  estratto da `AggregateFlow.vue` del deck originale, ma generico: passi
-  i tuoi step invece di ricreare ogni volta un componente ad hoc.
+* `mark-teal`, `mark-orange`, `mark-green`
+* `u-solid-*`, `u-dashed-*`, `u-wavy-*`, `u-dotted-*`
+* `comparison-grid`
+* `comparison-card`
+* `three-up`
+* `pipeline-grid`
+* `soft-card`
+* `slide-shell`
 
-## Come personalizzare
+See `styles/index.css` for the complete design system and available utilities.
 
-1. Modifica `slides.md`: titolo, autori, contenuto di ogni slide.
-2. Aggiorna `components/references.ts` con la tua bibliografia.
-3. Sostituisci `Logo.vue` col logo vero (o rimuovilo).
-4. Se vuoi i badge ACM artifact evaluation nella cover, metti i PNG in
-   `public/badge-available.png` e `public/badge-reusable.png`, altrimenti
-   rimuovi il blocco `.cover-badges` da `slides.md`.
-5. Per animazioni specifiche del tuo dominio (come `ChannelEvolution.vue`
-   o `FlockingStages.vue` nel deck originale), crea nuovi componenti in
-   `components/` seguendo il pattern di `FlowDiagram.vue` (props tipizzate,
-   prop opzionale `click` per il reveal progressivo, stile scoped che usa
-   le CSS variable `--deck-teal/orange/green`).
-6. Il deploy su GitHub Pages è già pronto in
-   `.github/workflows/deploy-slides.yml`: basta pushare su `main` con questo
-   repo pubblico e le Pages configurate su "GitHub Actions".
+## Reusable Components
 
-## Cosa NON è stato portato dal deck originale (di proposito)
+### Logo
 
-Componenti legati al contenuto specifico della ricerca (`AggregateFlow.vue`,
-`ArchitectureOverview.vue`, `ChannelEvolution.vue`, `FederatedLearningStep.vue`,
-`FieldEvolution.vue`, `FlockingStages.vue`, `LocalRoundLoop.vue`,
-`PhyeldsLogo.vue`) non sono stati copiati: sono illustrazioni ad hoc per
-quella presentazione, non riusabili in generale. `FlowDiagram.vue` copre lo
-stesso bisogno (uno stage-diagram animato) in forma parametrica.
-# template-slidev
+```vue
+<Logo text="..." />
+```
+
+A placeholder SVG logo component. Replace it with your own logo, customize the component, or use `BaseImg` with an image stored in `public/`.
+
+### QR Card
+
+```vue
+<QrCard title="..." url="..." :size="6.5" />
+```
+
+Generates a QR code at runtime and displays it together with a title.
+
+### Citations and References
+
+```vue
+<Cites refs="1,3" />
+<References />
+```
+
+The citation system is based on `components/references.ts`.
+
+Bibliography entries are defined in one place and reused both for per-slide citation notes and for the final references slide.
+
+### Flow Diagram
+
+```vue
+<FlowDiagram :stages="[...]" :click="$clicks" />
+```
+
+A reusable multi-step diagram with progressive click-based reveal.
+
+Provide the stages as data instead of creating a dedicated component for every diagram.
+
+## Customization
+
+1. Edit `slides.md` to define the title, authors, and presentation content.
+2. Update `components/references.ts` with your bibliography.
+3. Replace or customize `Logo.vue` with your own logo.
+4. Customize colors, typography, layouts, and utility classes in `styles/index.css`.
+5. Add images and other static assets to `public/` when needed.
+6. Create additional Vue components in `components/` for presentation-specific visualizations or animations.
+7. Reuse the existing component patterns when implementing click-based or staged animations.
+
+## GitHub Pages Deployment
+
+The repository includes a GitHub Actions workflow for deploying the presentation to GitHub Pages:
+
+```text
+.github/workflows/deploy-slides.yml
+```
+
+The workflow can be used to automatically build and publish the presentation when changes are pushed to the repository.
+
+The post-build script:
+
+```text
+scripts/postbuild.mjs
+```
+
+generates the redirects required to support direct links to individual slides in the deployed presentation.
+
+## Repository Structure
+
+The template is designed to keep presentation content, styling, reusable components, references, and deployment configuration separated.
+
+This makes it possible to use the repository as a starting point for different Slidev presentations while keeping a consistent presentation structure and design system.
